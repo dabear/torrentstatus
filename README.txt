@@ -1,5 +1,3 @@
-Create and give your self full access to C:\windows\temp\periscope
-install periscope with c:\python2\python\scripts\easy_install periscope, then copy my changes in the external libs folder over to c:\python27\python
 
 Assuming this structure:
 C:\scripts\torrentstatus
