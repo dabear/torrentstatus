@@ -20,6 +20,10 @@ parser.add_argument("--torrentstatus", type=int, help="Current torrent status. E
 parser.add_argument("--laststatus", type=int, help="Previous torrent status. Ex.: 6 (any value 0-12)", required=True)
 parser.add_argument("--downloadpath", help="File path where media from torrent is downloaded to. This is used"
                                            " for downloading subtitles Ex.: H:\Other", required=True)
+parser.add_argument("--filename", help="File name used when"
+                                           " downloading subtitles Ex.: foo.bar.s01e01.xvid.avi", required=True)
+parser.add_argument("--torrenttype", help="single|multi"
+                                           " .Indicates if torrent contains a single file or multiple files", required=True)
 args = parser.parse_args()
 
 #print args
