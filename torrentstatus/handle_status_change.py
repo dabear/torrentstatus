@@ -24,6 +24,8 @@ parser.add_argument("--filename", help="File name used when"
                                            " downloading subtitles Ex.: foo.bar.s01e01.xvid.avi", required=True)
 parser.add_argument("--torrenttype", help="single|multi"
                                            " .Indicates if torrent contains a single file or multiple files", required=True)
+parser.add_argument("--hash", help="Torrenthash for given torrent"
+                                           " ", required=True)
 args = parser.parse_args()
 
 #print args

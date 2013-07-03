@@ -61,7 +61,8 @@ def listener(args):
             path = args.downloadpath
             mediafiles = []
             for f in torrentstatus.utils.get_media_files(path):
-                mediafiles.append( (None, f, False, None, "") )
+                if not torrentstatus.utils.has_subtitle_file(f):
+                    mediafiles.append( (None, f, False, None, "") )
             if mediafiles:
                 cursor.executemany("INSERT INTO  Mediafiles( id,path, added_date, is_processed, processed_date, srt_file) VALUES(?, ?, strftime('%s','now'), ?, ?, ?)", mediafiles)
             
@@ -69,7 +70,7 @@ def listener(args):
             #check if args.downloadpath + args.filename exists, check if it is is a media file, add it
             path = os.path.join(args.downloadpath, args.filename)
             print "single torrent, got path:{0}".format(path)
-            if os.path.exists(path) and os.path.isfile(path) and torrentstatus.utils.is_media_file(path):
+            if os.path.exists(path) and os.path.isfile(path) and torrentstatus.utils.is_media_file(path) and not torrentstatus.utils.has_subtitle_file(path):
                 print "executing single media insert"
                 cursor.execute("INSERT INTO Mediafiles( id,path, added_date, is_processed, processed_date, srt_file) VALUES(?, ?, strftime('%s','now'), ?, ?, ?)",  (None, path, False, None, "") )
         conn.commit()
