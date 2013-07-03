@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from datetime import datetime
+import datetime
 
 from torrentstatus.Settings import Settings
 import torrentstatus.utils
@@ -14,18 +14,21 @@ import subprocess
 #
 
 def fetch_subtitle(filename):
+    print("fetching subtitle for {0}".format(filename))
     base = os.path.basename(filename)
-    result = subprocess.call(["filebot", "-get-subtitles", filename, "--q", base, "--lang", "en", "--output", "srt", "--encoding", "utf8", "-non-strict"])
-    pass
-    return False
+    noext = filename.rsplit(".", 1)[0]
+    result = subprocess.call(["filebot", "-get-subtitles", filename, "--q", base, "--lang", "en", "--output", noext+".srt", "--encoding", "utf8", "-non-strict"])
+    print("got result from filebot:{0}".format(result))
+    return result == 0
 
 if __name__ == '__main__':
-    conn, cur = torrentstatus.utils.connect_db()
+    cur, conn = torrentstatus.utils.connect_db()
     if conn:
         today = datetime.datetime.today()
         delta = datetime.timedelta(days=30)
-        media = get_media(conn, cur)
+        media = torrentstatus.utils.get_media_list(conn, cur)
         for row in media:
+            print("got media {0}".format(row["path"]) )
             try:
                 processed = datetime.fromtimestamp(row["processed_date"])
             except:
@@ -39,5 +42,8 @@ if __name__ == '__main__':
             elif not row["srt_file"] and not row["is_processed"]:
                 ok = fetch_subtitle(row["path"])
                 if ok:
-                    cur.execute("UPDATE Mediafiles SET is_processed=1,processed_date=strftime('%s','now') WHERE id=?", row["id"])
+                    print("updating id {0}, it is now processed".format(row["id"]))
+                    cur.execute("UPDATE Mediafiles SET is_processed=1,processed_date=strftime('%s','now') WHERE id=?", (row["id"],))
+        conn.commit()
+        
     
