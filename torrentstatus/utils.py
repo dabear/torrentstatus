@@ -49,7 +49,7 @@ def IterRows(cursor, arraysize=1000):
 
 def has_subtitle_file(filename):
     assert os.path.exists(filename)
-    base = filename.rsplit(".", 1) # spam-eggs.sausage.avi ->spam-eggs.sausage
+    base = filename.rsplit(".", 1)[0] # spam-eggs.sausage.avi ->spam-eggs.sausage
     return os.path.exists(base + ".srt") #->spam-eggs.sausage.srt
 
 def is_media_file(filename, extensions=".mkv|.avi|.mp4|.mpeg"):

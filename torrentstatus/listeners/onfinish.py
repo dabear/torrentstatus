@@ -12,8 +12,8 @@ import os.path
 import sqlite3
 
 
-# --torrentname "Warehouse.13.S02.INTERNAL.720p.HDTV.x264-BitMeTV" --torrentstatus 5  --laststatus 6 --downloadpath "h:\Other\Series\Warehouse.13.S02.INTERNAL.720p.HDTV.x264-BitMeTV" 
-"h:\Other\Series\Warehouse.13.S02.INTERNAL.720p.HDTV.x264-BitMeTV\warehouse.13.s02e01.720p.hdtv.x264.ctu.mkv"
+#C:\scripts\torrentstatus\invoke.vbs  C:\scripts\torrentstatus\runit.bat --torrentname "Under.the.Dome.S01E01.720p.HDTV.X264-DIMENSION.mkv" --torrentstatus 5  --laststatus 6 --downloadpath "h:\Other"  --torrenttype "single" --filename "Under.the.Dome.S01E01.720p.HDTV.X264-DIMENSION.mkv" --hash "6E5385285A6BC9D91A42F1B096156407DFBD4C4B"
+
 
 #c:\Python27\python handle_status_change.py --torrentname "Dexter.S07E10.720p.HDTV.x264-IMMERSE.mkv" --torrentstatus 5  --laststatus 6 --downloadpath "H:\Other"
 
