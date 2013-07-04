@@ -1,14 +1,20 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
-
 
 from xml.dom.minidom import parseString
-from httplib import HTTPSConnection
-from urllib import urlencode
 
-__version__ = "0.1"
+try:
+        from http.client import HTTPSConnection
+except ImportError:
+        from httplib import HTTPSConnection
 
-API_SERVER = 'www.notifymyandroid.com'
+try:
+        from urllib.parse import urlencode
+except ImportError:
+        from urllib import urlencode
+
+__version__ = "1.0"
+
+API_SERVER = 'www.notifymyandroid.com' 
 ADD_PATH   = '/publicapi/notify'
 
 USER_AGENT="PyNMA/v%s"%__version__
@@ -20,7 +26,7 @@ def uniq_preserve(seq): # Dave Kirby
 
 def uniq(seq):
     # Not order preserving
-    return {}.fromkeys(seq).keys()
+    return list({}.fromkeys(seq).keys())
 
 class PyNMA(object):
     """PyNMA(apikey=[], developerkey=None)
@@ -62,18 +68,15 @@ takes 2 optional arguments:
         if type(developerkey) == str and len(developerkey) == 48:
             self._developerkey = developerkey
 
-    def push(self, application="", event="", description="", url="", contenttype=None, priority=0, batch_mode=False, html=False):
+    def push(self, application="", event="", description="", url="", priority=0, batch_mode=False):
         """Pushes a message on the registered API keys.
 takes 5 arguments:
  - (req) application: application name [256]
  - (req) event:       event name       [1000]
  - (req) description: description      [10000]
  - (opt) url:         url              [512]
- - (opt) contenttype: Content Type (act: None (plain text) or text/html)
  - (opt) priority:    from -2 (lowest) to 2 (highest) (def:0)
- - (opt) batch_mode:  call API 5 by 5 (def:False)
-
- - (opt) html:        shortcut for contenttype=text/html
+ - (opt) batch_mode:  push to all keys at once (def:False)
 
 Warning: using batch_mode will return error only if all API keys are bad
  cf: http://nma.usk.bz/api.php
@@ -88,9 +91,6 @@ Warning: using batch_mode will return error only if all API keys are bad
         if url:
             datas['url'] = url[:512]
 
-        if contenttype == "text/html" or html == True: # Currently only accepted content type
-            datas['content-type'] = "text/html"
-
         if self._developerkey:
             datas['developerkey'] = self._developerkey
 
@@ -102,10 +102,9 @@ Warning: using batch_mode will return error only if all API keys are bad
                 res = self.callapi('POST', ADD_PATH, datas)
                 results[key] = res
         else:
-            for i in range(0, len(self._apikey), 5):
-                datas['apikey'] = ",".join(self._apikey[i:i+5])
-                res = self.callapi('POST', ADD_PATH, datas)
-                results[datas['apikey']] = res
+            datas['apikey'] = ",".join(self._apikey)
+            res = self.callapi('POST', ADD_PATH, datas)
+            results[datas['apikey']] = res
         return results
         
     def callapi(self, method, path, args):
@@ -118,7 +117,7 @@ Warning: using batch_mode will return error only if all API keys are bad
 
         try:
             res = self._parse_reponse(resp.read())
-        except Exception, e:
+        except Exception as e:
             res = {'type':    "pynmaerror",
                    'code':    600,
                    'message': str(e)
@@ -132,12 +131,12 @@ Warning: using batch_mode will return error only if all API keys are bad
         for elem in root.childNodes:
             if elem.nodeType == elem.TEXT_NODE: continue
             if elem.tagName == 'success':
-                res = dict(elem.attributes.items())
+                res = dict(list(elem.attributes.items()))
                 res['message'] = ""
                 res['type']    = elem.tagName
                 return res
             if elem.tagName == 'error':
-                res = dict(elem.attributes.items())
+                res = dict(list(elem.attributes.items()))
                 res['message'] = elem.firstChild.nodeValue
                 res['type']    = elem.tagName
                 return res
