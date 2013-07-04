@@ -30,7 +30,7 @@ def connect_db():
         
         return (cursor, conn)
     except Exception as e:
-        print "could not access database: {0}. Error: {1}".format(path, e)
+        print ("could not access database: {0}. Error: {1}".format(path, e))
         return (False, False)
 
 def get_media_list(conn,cur):
@@ -48,10 +48,13 @@ def IterRows(cursor, arraysize=1000):
         for result in results:
             yield result
 
-def has_subtitle_file(filename):
+def has_subtitle_file(filename, langcode=""):
     assert os.path.exists(filename)
+    if langcode:
+        langcode = "." + langcode
     base = filename.rsplit(".", 1)[0] # spam-eggs.sausage.avi ->spam-eggs.sausage
-    return os.path.exists(base + ".srt") #->spam-eggs.sausage.srt
+    checkfile = ''.join(base, langcode, ".srt")
+    return os.path.exists(checkfile), checkfile #->spam-eggs.sausage.srt
 
 def is_media_file(filename, extensions=".mkv|.avi|.mp4|.mpeg"):
     allowed_extensions = tuple(extensions.split("|"))

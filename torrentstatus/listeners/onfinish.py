@@ -12,7 +12,7 @@ import os.path
 import sqlite3
 
 
-#C:\scripts\torrentstatus\invoke.vbs  C:\scripts\torrentstatus\runit.bat --torrentname "Under.the.Dome.S01E01.720p.HDTV.X264-DIMENSION.mkv" --torrentstatus 5  --laststatus 6 --downloadpath "h:\Other"  --torrenttype "single" --filename "Under.the.Dome.S01E01.720p.HDTV.X264-DIMENSION.mkv" --hash "6E5385285A6BC9D91A42F1B096156407DFBD4C4B"
+# C:\scripts\torrentstatus\runit.bat --torrentname "Under.the.Dome.S01E01.720p.HDTV.X264-DIMENSION.mkv" --torrentstatus 5  --laststatus 6 --downloadpath "h:\Other"  --torrenttype "single" --filename "Under.the.Dome.S01E01.720p.HDTV.X264-DIMENSION.mkv" --hash "6E5385285A6BC9D91A42F1B096156407DFBD4C4B"
 
 
 #c:\Python27\python handle_status_change.py --torrentname "Dexter.S07E10.720p.HDTV.x264-IMMERSE.mkv" --torrentstatus 5  --laststatus 6 --downloadpath "H:\Other"
@@ -46,7 +46,7 @@ def listener(args):
     
     if cursor:
         
-        print "got cursor"
+        print("got cursor")
         #
         # Get all media files in download dir
         # Add them into database for later processing. Sometimes subtitles become available some
@@ -69,12 +69,12 @@ def listener(args):
         elif args.torrenttype == "single":
             #check if args.downloadpath + args.filename exists, check if it is is a media file, add it
             path = os.path.join(args.downloadpath, args.filename)
-            print "single torrent, got path:{0}".format(path)
+            print("single torrent, got path:{0}".format(path))
             if os.path.exists(path) and os.path.isfile(path) and torrentstatus.utils.is_media_file(path) and not torrentstatus.utils.has_subtitle_file(path):
-                print "executing single media insert"
+                print("executing single media insert")
                 cursor.execute("INSERT INTO Mediafiles( id,path, added_date, is_processed, processed_date, srt_file) VALUES(?, ?, strftime('%s','now'), ?, ?, ?)",  (None, path, False, None, "") )
         conn.commit()
         conn.close()
         
         
-    print "ferdig"
+    print("finished processing\r\n")

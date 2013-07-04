@@ -4,8 +4,8 @@ from pynma import PyNMA
 from torrentstatus import Settings
 
 settings = Settings.Settings.nma
-if settings and settings.has_key("key"):
-    def send_push_notification(event="torrent completed", desc=u"Torrent er ferdig nedlasta", url="http://example.com"):
+if settings and "key" in settings:
+    def send_push_notification(event="torrent completed", desc="Torrent is downloaded", url="http://example.com"):
         key = settings["key"]
         p = PyNMA(key)
         try:
@@ -19,4 +19,4 @@ if settings and settings.has_key("key"):
 
 else:
     def send_push_notification(*args):
-        print "Not sending notification, check that key is defined for nma in Settings.py"
+        print("Not sending notification, check that key is defined for nma in config file")

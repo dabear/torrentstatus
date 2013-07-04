@@ -17,9 +17,13 @@ def fetch_subtitle(filename):
     print("fetching subtitle for {0}".format(filename))
     base = os.path.basename(filename)
     noext = filename.rsplit(".", 1)[0]
-    result = subprocess.call(["filebot", "-get-subtitles", filename, "--q", base, "--lang", "en", "--output", noext+".srt", "--encoding", "utf8", "-non-strict"])
+    result = subprocess.call(["filebot", "-get-subtitles", filename, "--q", base,
+                              "--lang", "en", "--output", "srt", "--encoding",
+                              "utf8", "-non-strict"])
+
     print("got result from filebot:{0}".format(result))
-    return result == 0
+    
+    return torrentstatus.utils.has_subtitle_file(filename, langcode="eng")
 
 if __name__ == '__main__':
     cur, conn = torrentstatus.utils.connect_db()
@@ -35,15 +39,17 @@ if __name__ == '__main__':
                 processed = False
                 
             #delte old records
-            if (row["srt_file"] or row["is_processed"] == 1 and processed and processed < (today-delta)) or \
+            if (row["is_processed"] == 1 and processed and processed < (today-delta)) or \
                 not os.path.exists(row["path"]):
-                cur.execute("DELETE FROM Mediafiles WHERE id=?",(row["id"]))
+                print("id {0} is now either outdated or file does no longer exist? {1}. Deleting from DB".format(row["id"], row["path"]))
+                cur.execute("DELETE FROM Mediafiles WHERE id=?",(row["id"],))
             #download new
             elif not row["srt_file"] and not row["is_processed"]:
-                ok = fetch_subtitle(row["path"])
+                ok, srtfile = fetch_subtitle(row["path"])
                 if ok:
                     print("updating id {0}, it is now processed".format(row["id"]))
-                    cur.execute("UPDATE Mediafiles SET is_processed=1,processed_date=strftime('%s','now') WHERE id=?", (row["id"],))
+                    cur.execute("UPDATE Mediafiles SET is_processed=1,processed_date=strftime('%s','now'),srt_file=? WHERE id=?", (srtfile,row["id"]))
         conn.commit()
+        conn.close()
         
     

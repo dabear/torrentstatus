@@ -7,7 +7,7 @@ settings = Settings.Settings.email
 
 if not settings:
     def send_email(*args):
-        print "not sending email, no settings defined in Settings.py"
+        print("not sending email, no settings defined in configuration file")
 else:
     def send_email(subject, body, sender=settings["send_from"], receiver=settings["send_to"], smtp=settings["smtp"]):
         #print sender
