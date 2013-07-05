@@ -1,12 +1,17 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import datetime
-
-from torrentstatus.Settings import Settings
 import torrentstatus.utils
 
 import os
 import subprocess
+
+# cd c:\scripts\torrentstatus
+# set PYTHONPATH=%PYTHONPATH%;%~dp0
+# c:\python27\python.exe -m torrentstatus.download
+
+
+
 
 #
 # This script is supposed to be run on a schedule
@@ -23,7 +28,7 @@ def fetch_subtitle(filename):
 
     print("got result from filebot:{0}".format(result))
     
-    return torrentstatus.utils.has_subtitle_file(filename, langcode="eng")
+    return torrentstatus.utils.get_subtitle_info(filename, langcode="eng")
 
 if __name__ == '__main__':
     cur, conn = torrentstatus.utils.connect_db()

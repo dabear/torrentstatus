@@ -6,14 +6,6 @@ import os, sys
 
 from listeners import onfinish, onstart
 
-# To make this code in email.py work:
-#   from ..Settings import Settings
-# handle_status_change must be invoked as a module, with the following code:
-#   c:\python27\python -m torrentstatus.handle_status_change --help
-#
-
-
-
 parser = argparse.ArgumentParser(description='Behandler torrent-status, sender notifications per mail og til telefoner')
 parser.add_argument("--torrentname", help="Ex.: Dexter.S07E10.720p.HDTV.x264-IMMERSE.mkv", required=True)
 parser.add_argument("--torrentstatus", type=int, help="Current torrent status. Ex.: 5 (any value 0-12)", required=True)

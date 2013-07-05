@@ -10,11 +10,11 @@ __all__ = [
 import os, sys
 import sqlite3
 
-from Settings import Settings
+from torrentstatus.settings import settings
 
 def connect_db():
     
-    path = os.path.expanduser(Settings.media_db)
+    path = os.path.expanduser(settings["media_db"])
     dirname = os.path.dirname(path)
     if not os.path.exists(dirname):
         os.makedirs(dirname)
@@ -48,12 +48,12 @@ def IterRows(cursor, arraysize=1000):
         for result in results:
             yield result
 
-def has_subtitle_file(filename, langcode=""):
+def get_subtitle_info(filename, langcode=settings["sub_lang"]):
     assert os.path.exists(filename)
     if langcode:
         langcode = "." + langcode
     base = filename.rsplit(".", 1)[0] # spam-eggs.sausage.avi ->spam-eggs.sausage
-    checkfile = ''.join(base, langcode, ".srt")
+    checkfile = ''.join((base, langcode, ".srt"))
     return os.path.exists(checkfile), checkfile #->spam-eggs.sausage.srt
 
 def is_media_file(filename, extensions=".mkv|.avi|.mp4|.mpeg"):
@@ -65,8 +65,12 @@ def get_media_files( filedir=None):
     if filedir is None:
         raise ValueError("filedir parameter must be set")  
     #list of all media files in filedir
-    return  [os.path.join(filedir, x) for x in os.listdir(filedir) if is_media_file(filename) ]
-
+    files = []
+    for x in os.listdir(filedir):
+        filename = os.path.join(filedir, x)
+        if is_media_file(filename):
+            files.append(filename)
+    return files
     
 
     

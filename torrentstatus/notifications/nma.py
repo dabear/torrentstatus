@@ -1,22 +1,21 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from pynma import PyNMA
-from torrentstatus import Settings
+from torrentstatus.settings import settings
 
-settings = Settings.Settings.nma
-if settings and "key" in settings:
+
+if settings and "nma_key" in settings and settings["nma_key"]:
     def send_push_notification(event="torrent completed", desc="Torrent is downloaded", url="http://example.com"):
-        key = settings["key"]
+        key = settings["nma_key"]
         p = PyNMA(key)
         try:
-            res = res = p.push("Utorrent Notifier", event,
+            res = p.push("Utorrent Notifier", event,
                                desc,
                                url, batch_mode=False, html=True)
-        except:
-            pass
-        if __name__ == "__main__":
-            print(res)
+        except Exception as e:
+            raise e
+            
 
 else:
     def send_push_notification(*args):
-        print("Not sending notification, check that key is defined for nma in config file")
+        print("Not sending notification, check if nma_key is defined in config file")
