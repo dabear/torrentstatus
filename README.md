@@ -32,7 +32,7 @@ C:\scripts\torrentstatus\README.txt
 C:\scripts\torrentstatus\runit.bat
 C:\scripts\torrentstatus\torrentstatus\
 C:\scripts\torrentstatus\torrentstatus\handle_status_change.py
-(etc..)
+(etc..) a
 
 If you want to call this script manually, make sure that the folder "C:\scripts\torrentstatus\" is in python's searchpath.
 You can do that by setting the environment variable PYTHONPATH, either permanently through your system properties, or temporarily by doing
