@@ -1,30 +1,44 @@
-# Torrentstatus, what is it?
-Currently in pre-alpha mode, this set of python scripts makes up a package that can be called manually or automatically by utorrent when a torrent download starts or completes.
-Actions implemented are as follows:
-  -on start of download:
-    -Send email
-    -(todo:) Change label of torrent based on a list of regexp matched against tracker url
-  -on completion of download:
-    -Send email
-    -Alert through pynma (notify my android)
-    -Download subtitles (depends on filebot being installed)
+# Torrentstatus
+
+Currently in pre-alpha mode, this set of python scripts makes up a package that can be used for automating certain torrent related activities
+
+## Actions implemented are as follows:
+### on start of download:
+-Send email
+-(todo:) Change label of torrent based on a list of regexp matched against tracker url
+###  On completion of download:
+-Send email
+-Alert through pynma (notify my android)
+-Download subtitles (depends on filebot being installed)
 
     
-# Dependencies
-  -utorrent
-  -python 2.7 or later python version in the 2.x-series
-  -filebot executable installed and available from your path. Can be downloaded from http://www.filebot.net/#download
+## Requirements
+  -uTorrent for windows
+  -Python 2.7 or later python version in the 2.x-series
+  -Filebot executable installed and available from your path. Can be downloaded from http://www.filebot.net/#download
   -(todo:) utorrent webui
 
 
-# First time setup, setting up config file
+## First time setup, setting up config file
 Open command line and navigate to the location of settings.py
 Run the python interpreter against settings.py
-c:\python27\python settings.py
+c:\python27\python settings.py .
+
 A new config.ini file will be created at ~/.config/Torrentstatus/
+
 Edit this file, add your settings for sending email and your nma api key ( https://www.notifymyandroid.com/account.jsp)
 
-# Calling script manually without installing to system(hacking PYTHONPATH)
+
+## Usage
+Add this to uTorrents "run program when torrent changes status" config:
+  ```sh
+C:\scripts\torrentstatus\invoke.vbs  C:\scripts\torrentstatus\runit.bat --torrentname "%N" --torrentstatus %S  --laststatus %P --downloadpath "%D"  --torrenttype "%K" --filename "%F" --hash "%I"
+  ```
+
+Note invoke.vbs is just a wrapper to avoid a flashing console window. This wrapper will be removed soon.
+
+
+## Debugging
 
 Assuming this structure:
 C:\scripts\torrentstatus
@@ -36,17 +50,15 @@ C:\scripts\torrentstatus\torrentstatus\handle_status_change.py
 
 If you want to call this script manually, make sure that the folder "C:\scripts\torrentstatus\" is in python's searchpath.
 You can do that by setting the environment variable PYTHONPATH, either permanently through your system properties, or temporarily by doing
-
+  ```sh
 set PYTHONPATH=%PYTHONPATH%;C:\scripts\torrentstatus\
-
+  ```
 You can then test the module by executing:
 c:\python27\python.exe -m torrentstatus.handle_status_change --help
 
-Add the following to utorrent's settings "advanced"->"execute program":
-C:\scripts\torrentstatus\invoke.vbs  C:\scripts\torrentstatus\runit.bat --torrentname "%N" --torrentstatus %S  --laststatus %P --downloadpath "%D"  --torrenttype "%K" --filename "%F" --hash "%I"
+### Invoking onfinish handler manually
 
-invoke.vbs is needed when calling a bat file silently. Only applicable if you did not install the package 
-You can test the script functionality from command line by doing something like:
-C:\scripts\torrentstatus\runit.bat --torrentname "Under.the.Dome.S01E01.720p.HDTV.X264-DIMENSION.mkv" --torrentstatus 5  --laststatus 6 --downloadpath "h:\Other"  --torrenttype "single" --filename "Under.the.Dome.S01E01.720p.HDTV.X264-DIMENSION.mkv" --hash "6E5385285A6BC9D91A42F1B096156407DFBD4C4B"
+Note the torrent doesn't actually have to exist to test this functionality;
 
+C:\scripts\torrentstatus\runit.bat --torrentname "Kodemysteriene - VG+" --torrentstatus 5  --laststatus 6 --downloadpath "h:\Other\Kodemysteriene - VG+"  --torrenttype "multi" --filename "Kodemysteriene - VG+.pdf" --hash "D700D1F9BC72DCAE1FB2B1E54F39BA3D27C4440B"
 
