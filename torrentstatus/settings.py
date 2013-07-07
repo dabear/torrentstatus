@@ -3,8 +3,12 @@
 __all__ = [ "settings" ]
 
 import os
-import ConfigParser
 from pprint import pprint
+
+try:
+    import ConfigParser
+except:
+    import configparser as ConfigParser
 
 #default location
 config_location = "~/.config/Torrentstatus/config.ini"
