@@ -1,0 +1,3 @@
+[submodule "torrentstatus/externals/utorrentctl"]
+	path = torrentstatus/externals/utorrentctl
+	url = git://github.com/twistedfall/utorrentctl
