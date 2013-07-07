@@ -19,13 +19,21 @@ Currently in pre-alpha mode, this set of python scripts makes up a package that 
 - Filebot executable installed and available from your path.  Can be downloaded from http://www.filebot.net/#download
 - (todo:) utorrent webui
 
+## Installation
+Download the source ( [ZIP][] here) and run setup.py
+  ```bat
+cd pathToFolder
+c:\python27\python setup.py install
+  ```
+
+
 
 ## First time setup, setting up config file
-Open command line and navigate to the location of settings.py
-Run the python interpreter against settings.py
+Open command line and run the python interpreter against 
 
   ```bat
-c:\python27\python settings.py .
+
+c:\python27\python -m torrentsettings.setup
   ```
 
 A new config.ini file will be created at ~/.config/Torrentstatus/
@@ -34,42 +42,36 @@ Edit this file, add your settings for sending email and your nma api key ( https
 
 
 ## Usage
-Add this to uTorrents "run program when torrent changes status" config:
+- Add this to uTorrents "run program when torrent changes status" config:
   ```bat
-C:\scripts\torrentstatus\invoke.vbs  C:\scripts\torrentstatus\runit.bat --torrentname "%N" --torrentstatus %S  --laststatus %P --downloadpath "%D"  --torrenttype "%K" --filename "%F" --hash "%I"
+c:\python27\pythonw.exe -m torrentstatus.handle_status_change --torrentname "%N" --torrentstatus %S  --laststatus %P --downloadpath "%D"  --torrenttype "%K" --filename "%F" --hash "%I"
   ```
+- Create a windows scheduled task to run c:\python27\pythonw.exe -m torrentstatus.download on a regular basis. This downloads subtitles for finished torrents with media files available.
 
-Note invoke.vbs is just a wrapper to avoid a flashing console window. This wrapper will be removed soon.
 
 
 ## Debugging
 
-Assuming this structure:
-- C:\scripts\torrentstatus
-- C:\scripts\torrentstatus\README.txt
-- C:\scripts\torrentstatus\runit.bat
-- C:\scripts\torrentstatus\torrentstatus\
-- C:\scripts\torrentstatus\torrentstatus\handle_status_change.py
-(etc..) a
 
-If you want to call this script manually, make sure that the folder "C:\scripts\torrentstatus\" is in python's searchpath.
-You can do that by setting the environment variable PYTHONPATH, either permanently through your system properties, or temporarily by doing
+Use python.exe, *not* pythonw.exe for debugging purposes
+Install package in develop mode
   ```bat
-set PYTHONPATH=%PYTHONPATH%;C:\scripts\torrentstatus\
+cd pathToFolder
+c:\python27\python setup.py develop
   ```
 
-You can then test the module by executing:
   ```bat
 c:\python27\python.exe -m torrentstatus.handle_status_change --help
   ```
 
 
 ### Invoking onfinish handler manually
-  ```bat
+  
 
 Note the torrent doesn't actually have to exist to test this functionality;
 
-C:\scripts\torrentstatus\runit.bat --torrentname "Kodemysteriene - VG+" --torrentstatus 5  --laststatus 6 --downloadpath "h:\Other\Kodemysteriene - VG+"  --torrenttype "multi" --filename "Kodemysteriene - VG+.pdf" --hash "D700D1F9BC72DCAE1FB2B1E54F39BA3D27C4440B"
+```bat
+c:\python27\python.exe -m torrentstatus.handle_status_change --torrentname "Kodemysteriene - VG+" --torrentstatus 5  --laststatus 6 --downloadpath "h:\Other\Kodemysteriene - VG+"  --torrenttype "multi" --filename "Kodemysteriene - VG+.pdf" --hash "D700D1F9BC72DCAE1FB2B1E54F39BA3D27C4440B"
   ```
 
 

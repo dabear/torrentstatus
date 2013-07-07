@@ -1,7 +1,6 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#from torrentstatus.media_subtitle_download  import SubtitleDownloader
 from torrentstatus.notifications.email import send_email
 from torrentstatus.notifications.nma  import send_push_notification
 
@@ -11,13 +10,10 @@ import torrentstatus.utils
 import os.path
 import sqlite3
 
-#
-# C:\scripts\torrentstatus\runit.bat --torrentname "Brickleberry.S01E10.NORSUB.PDTV.x264-LEVERPOSTEi.mp4" --torrentstatus 5  --laststatus 6 --downloadpath "h:\Other"  --torrenttype "single" --filename "Brickleberry.S01E10.NORSUB.PDTV.x264-LEVERPOSTEi.mp4" --hash "7CA0733BED1B9B85B9E936B2C5E241CA47EC6B54"
 # C:\scripts\torrentstatus\runit.bat --torrentname "Under.the.Dome.S01E01.720p.HDTV.X264-DIMENSION.mkv" --torrentstatus 5  --laststatus 6 --downloadpath "h:\Other"  --torrenttype "single" --filename "Under.the.Dome.S01E01.720p.HDTV.X264-DIMENSION.mkv" --hash "6E5385285A6BC9D91A42F1B096156407DFBD4C4B"
-#
-
-#
 # C:\scripts\torrentstatus\runit.bat --torrentname "Kodemysteriene - VG+" --torrentstatus 5  --laststatus 6 --downloadpath "h:\Other\Kodemysteriene - VG+"  --torrenttype "multi" --filename "Kodemysteriene - VG+.pdf" --hash "D700D1F9BC72DCAE1FB2B1E54F39BA3D27C4440B"
+#
+# C:\Dropbox\Dropbox\scripts\torrentstatus>c:\python27\python.exe -m torrentstatus.handle_status_change --torrentname "Kodemysteriene - VG+" --torrentstatus 5  --laststatus 6 --downloadpath "h:\Other\Kodemysteriene - VG+"  --torrenttype "multi" --filename "Kodemysteriene - VG+.pdf" --hash "D700D1F9BC72DCAE1FB2B1E54F39BA3D27C4440B"
 #
 
 

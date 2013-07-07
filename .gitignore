@@ -1,8 +1,9 @@
 #################
 ## Custom
 #################
-
-
+Torrentstatus.egg-info/
+build/
+dist/
 #################
 ## Eclipse
 #################

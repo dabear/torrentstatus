@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from pynma import PyNMA
+from torrentstatus.notifications.pynma import PyNMA
 from torrentstatus.settings import settings
 
 
