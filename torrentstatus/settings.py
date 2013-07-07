@@ -91,7 +91,7 @@ class CSettings():
 
 
 conf = CSettings()
-conf.saveSettings()
+conf.checkSection()
 settings = {}
 
 
