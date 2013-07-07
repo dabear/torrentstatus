@@ -54,8 +54,8 @@ Edit this file, add your settings for sending email and your nma api key ( https
   ```bat
 c:\python33\pythonw.exe -m torrentstatus.handle_status_change --torrentname "%N" --torrentstatus %S  --laststatus %P --downloadpath "%D"  --torrenttype "%K" --filename "%F" --hash "%I"
   ```
-- Create a windows scheduled task to run c:\python27\pythonw.exe -m torrentstatus.download on a regular basis. This downloads subtitles for finished torrents with media files available.
-
+- Create a windows scheduled task to run c:\python33\pythonw.exe -m torrentstatus.download on a regular basis. This downloads subtitles for finished torrents with media files available.
+ 
 
 
 ## Debugging

@@ -55,7 +55,7 @@ def get_subtitle_info(filename, langcode=settings["sub_lang"]):
     base = filename.rsplit(".", 1)[0] # spam-eggs.sausage.avi ->spam-eggs.sausage
     checkfile = ''.join((base, langcode, ".srt"))
     checkfile2 = ''.join((base, ".srt"))
-    return (os.path.exists(checkfile) or os.path.exists(checkfil2)) , checkfile #->spam-eggs.sausage.srt
+    return (os.path.exists(checkfile) or os.path.exists(checkfile2)) , checkfile #->spam-eggs.sausage.srt
 
 def is_media_file(filename, extensions=".mkv|.avi|.mp4|.mpeg"):
     allowed_extensions = tuple(extensions.split("|"))
