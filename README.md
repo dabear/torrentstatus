@@ -41,7 +41,7 @@ Open command line and run the python interpreter against
 
   ```bat
 
-c:\python33\python -m torrentsettings.setup
+c:\python33\python -m torrentstatus.settings
   ```
 
 A new config.ini file will be created at ~/.config/Torrentstatus/
