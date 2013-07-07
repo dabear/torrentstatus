@@ -20,7 +20,8 @@ g_settings = {
     'nma_key'          :("0zmfq03bug1aghi1vtqy1bhfb7hfb8lq267maw2p3hebgh60",), #this key is fake..
     'media_db'     :("~/.config/Torrentstatus/mediafiles.db",), 
     'sub_lang'  :("eng",),
-    "test": ("bar",)
+
+
 }
 
 
@@ -51,9 +52,10 @@ class CSettings():
     
     def saveSettings(self):
       
-        f = open(self.getSettingsFile(), 'wb')
-        self.cfg.write(f)
-        f.close()
+        #f = open(self.getSettingsFile(), 'wb')
+        with open(self.getSettingsFile(), 'at', encoding='utf8') as f:
+            self.cfg.write(f)
+      
     
     def getSettingsFile(self):
         path = os.path.normpath(os.path.expanduser(config_location))
