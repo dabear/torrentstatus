@@ -1,16 +1,16 @@
 # Torrentstatus
 
-Currently in pre-alpha mode, this set of python scripts makes up a package that can be used for automating certain torrent related activities
+Currently in alpha mode, this set of python scripts makes up a package that can be used for automating certain torrent related activities
 
 ## Actions implemented are as follows:
 ### on start of download:
 - Send email
-- (todo:) Change label of torrent based on a list of regexp matched against tracker url
+- Change label of torrent based on a rulset defined in a config file ("auto label" feature)
 
 ### On completion of download:
 - Send email
 - Alert through pynma (notify my android)
-- Download subtitles (depends on filebot being installed)
+- Download subtitles. Depends on filebot being installed. This feature is currently fully coded but not called on complete.
 
     
 ## Requirements
@@ -52,7 +52,7 @@ Edit this file, add your settings for sending email and your nma api key ( https
 ## Usage
 - Add this to uTorrents "run program when torrent changes status" config:
   ```bat
-c:\python33\pythonw.exe -m torrentstatus.handle_status_change --torrentname "%N" --torrentstatus %S  --laststatus %P --downloadpath "%D"  --torrenttype "%K" --filename "%F" --hash "%I"
+c:\python33\pythonw.exe -m torrentstatus.handle_status_change --torrentname "%N" --torrentstatus %S  --laststatus %P --downloadpath "%D"  --torrenttype "%K" --filename "%F" --hash "%I" --tracker "%T"
   ```
 - Create a windows scheduled task to run c:\python33\pythonw.exe -m torrentstatus.download on a regular basis. This downloads subtitles for finished torrents with media files available.
  
@@ -79,7 +79,7 @@ c:\python33\python.exe -m torrentstatus.handle_status_change --help
 Note the torrent doesn't actually have to exist to test this functionality;
 
 ```bat
-c:\python33\python.exe -m torrentstatus.handle_status_change --torrentname "Kodemysteriene - VG+" --torrentstatus 5  --laststatus 6 --downloadpath "h:\Other\Kodemysteriene - VG+"  --torrenttype "multi" --filename "Kodemysteriene - VG+.pdf" --hash "D700D1F9BC72DCAE1FB2B1E54F39BA3D27C4440B"
+c:\python33\python.exe -m torrentstatus.handle_status_change --torrentname "Kodemysteriene - VG+" --torrentstatus 5  --laststatus 6 --downloadpath "h:\Other\Kodemysteriene - VG+"  --torrenttype "multi" --filename "Kodemysteriene - VG+.pdf" --hash "D700D1F9BC72DCAE1FB2B1E54F39BA3D27C4440B" --tracker "foo.bar.com/announce"
   ```
 
 
