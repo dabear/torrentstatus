@@ -12,6 +12,13 @@ import sqlite3
 
 from torrentstatus.settings import settings
 
+
+def get_config_dir():
+    config_home = os.getenv( "XDG_CONFIG_HOME" )
+    if config_home is None:
+        config_home = os.path.expanduser( "~" ) + os.path.sep + ".config"
+    return config_home + os.path.sep + "Torrentstatus" + os.path.sep
+
 def connect_db():
     
     path = os.path.expanduser(settings["media_db"])

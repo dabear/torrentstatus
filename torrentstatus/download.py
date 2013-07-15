@@ -19,10 +19,11 @@ import subprocess
 #
 
 def fetch_subtitle(filename):
-    print("fetching subtitle for {0}".format(filename))
+    print("\n\n\nfetching subtitle for {0}".format(filename))
     base = os.path.basename(filename)
-    noext = filename.rsplit(".", 1)[0]
-    result = subprocess.call(["filebot", "-get-subtitles", filename, "--q", base,
+    noext = base.rsplit(".", 1)[0]
+    print("\nAlso searching by name;{0}".format(noext))
+    result = subprocess.call(["filebot", "-get-subtitles", filename, "--q", noext,
                               "--lang", "en", "--output", "srt", "--encoding",
                               "utf8", "-non-strict"])
 

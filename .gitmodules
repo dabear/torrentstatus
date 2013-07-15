@@ -1,3 +1,6 @@
 [submodule "torrentstatus/externals/utorrentctl"]
 	path = torrentstatus/externals/utorrentctl
 	url = git://github.com/twistedfall/utorrentctl
+[submodule "torrentstatus/externals/BearLang"]
+	path = torrentstatus/externals/BearLang
+	url = https://github.com/dabear/BearLang.git

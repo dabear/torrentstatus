@@ -10,31 +10,43 @@ try:
 except:
     import configparser as ConfigParser
 
+def get_config_dir():
+    config_home = os.getenv( "XDG_CONFIG_HOME" )
+    if config_home is None:
+        config_home = os.path.expanduser( "~" ) + os.path.sep + ".config"
+    return config_home + os.path.sep + "Torrentstatus" + os.path.sep
+
 #default location
-config_location = "~/.config/Torrentstatus/config.ini"
+config_dir = "~/.config/Torrentstatus/config.ini"
 #default settings
-g_settings = { 
+defaults = { 
     'email_send_from'  :("bjorn@example.com",),
     'email_send_to'    :("bjorn@example.com",), 
     'email_smtp'       :("smtp.altibox.no",), 
     'nma_key'          :("0zmfq03bug1aghi1vtqy1bhfb7hfb8lq267maw2p3hebgh60",), #this key is fake..
     'media_db'     :("~/.config/Torrentstatus/mediafiles.db",), 
     'sub_lang'  :("eng",),
-
-
+    'webui_enable': ("0",),
+    'webui_username': ("bjorninge",),
+    "webui_password": ("password",),
+    "webui_host": ("192.168.10.102:9050",),
+        
 }
 
 
     
     
-class CSettings():
-    loaded_settings = False
-    
-    def __init__(self):
+class CSettings():  
+    def __init__(self, defaults, section="Torrentstatus", configfilebasename="config.ini"):
         self.cfg = None
-        self.section = 'Torrentstatus'
+        self.section = section
+        self.defaults = defaults
+        self.configfile = get_config_dir() + os.path.sep + configfilebasename
+        
         self.loadSettings()
         self.checkSection()
+        
+        
     
     
     
@@ -43,8 +55,8 @@ class CSettings():
    
         # options -> default
         dflt = {}
-        for opt in g_settings:
-            dflt[opt] = g_settings[opt][0]
+        for opt in self.defaults:
+            dflt[opt] = self.defaults[opt][0]
         
         # load settings
         self.cfg = ConfigParser.SafeConfigParser()
@@ -55,10 +67,10 @@ class CSettings():
         #f = open(self.getSettingsFile(), 'wb')
         with open(self.getSettingsFile(), 'at', encoding='utf8') as f:
             self.cfg.write(f)
-      
+       
     
     def getSettingsFile(self):
-        path = os.path.normpath(os.path.expanduser(config_location))
+        path = self.configfile
         dirname = os.path.dirname(path)
         if not os.path.exists(dirname):
             print("Setting up config file dir")
@@ -74,10 +86,10 @@ class CSettings():
             self.cfg.add_section(self.section)
             
         
-        for opt in g_settings:
+        for opt in self.defaults:
             if not self.cfg.has_option(self.section, opt):
                 modify = True
-                self.cfg.set(self.section, opt, g_settings[opt][0])
+                self.cfg.set(self.section, opt, self.defaults[opt][0])
                
                 
         # save if changed
@@ -96,7 +108,7 @@ class CSettings():
 
 
 
-conf = CSettings()
+conf = CSettings(defaults)
 conf.checkSection()
 settings = {}
 

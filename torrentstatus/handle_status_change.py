@@ -2,12 +2,25 @@
 # -*- coding: utf-8 -*-
 import argparse
 import os, sys
+import tempfile
 
+from torrentstatus import utils
+
+##
+# When running in windowed mode, stdin is fixed size.
+# This redirects stdin&stderr to file, to avoid that restriction.
+##
+if "pythonw" in sys.executable or sys.stdin is None or sys.stderr is None:
+    
+    debugfile = utils.get_config_dir() + os.path.sep + "torrentstatus_stdout.log"
+    sys.stdout = sys.stderr = open(debugfile, 'w')
+    
+            
 
 from torrentstatus.listeners import onfinish, onstart
 
 parser = argparse.ArgumentParser(description="""Process torrent status changes.
-                                 Example: c:\python27\pythonw.exe -m torrentstatus.handle_status_change --torrentname "%N" --torrentstatus %S  --laststatus %P --downloadpath "%D"  --torrenttype "%K" --filename "%F" --hash "%I"
+                                 Example: c:\python33\pythonw.exe -m torrentstatus.handle_status_change --torrentname "%N" --torrentstatus %S  --laststatus %P --downloadpath "%D"  --torrenttype "%K" --filename "%F" --hash "%I" --tracker "%T"
                                  """)
 parser.add_argument("--torrentname", help="Ex.: Dexter.S07E10.720p.HDTV.x264-IMMERSE.mkv", required=True)
 parser.add_argument("--torrentstatus", type=int, help="Current torrent status. Ex.: 5 (any value 0-12)", required=True)
@@ -19,6 +32,8 @@ parser.add_argument("--filename", help="File name used when"
 parser.add_argument("--torrenttype", help="single|multi"
                                            " .Indicates if torrent contains a single file or multiple files", required=True)
 parser.add_argument("--hash", help="Torrenthash for given torrent"
+                                           " ", required=True)
+parser.add_argument("--tracker", help="Tracker url for given torrent. Used to set label."
                                            " ", required=True)
 args = parser.parse_args()
 

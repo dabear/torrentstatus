@@ -54,7 +54,7 @@ def listener(args):
                 if not torrentstatus.utils.get_subtitle_info(path)[0]:
                     mediafiles.append( (None, path, False, None, "") )
             if mediafiles:
-                print("multi torrent, got paths: {0}".format( ''.join(mediafiles) ))
+                print("multi torrent, got paths: {0}".format( ','.join(str(v) for v in mediafiles) ))
                 cursor.executemany("INSERT INTO  Mediafiles( id,path, added_date, is_processed, processed_date, srt_file) VALUES(?, ?, strftime('%s','now'), ?, ?, ?)", mediafiles)
             
         elif args.torrenttype == "single":

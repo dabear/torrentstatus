@@ -4,6 +4,8 @@
 Torrentstatus.egg-info/
 build/
 dist/
+test_utorrent.py
+test_shlex.py
 #################
 ## Eclipse
 #################
