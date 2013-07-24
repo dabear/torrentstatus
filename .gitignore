@@ -6,6 +6,8 @@ build/
 dist/
 test_utorrent.py
 test_shlex.py
+test_listeners.py
+setuptools*.gz
 #################
 ## Eclipse
 #################

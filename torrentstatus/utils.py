@@ -74,10 +74,14 @@ def get_media_files( filedir=None):
         raise ValueError("filedir parameter must be set")  
     #list of all media files in filedir
     files = []
-    for x in os.listdir(filedir):
-        filename = os.path.join(filedir, x)
-        if is_media_file(filename):
-            files.append(filename)
+    try:
+        for x in os.listdir(filedir):
+            filename = os.path.join(filedir, x)
+            if is_media_file(filename):
+                files.append(filename)
+    except (OSError, IOError) as ex:
+        pass
+    
     return files
     
 

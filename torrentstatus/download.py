@@ -18,6 +18,7 @@ import subprocess
 # Loop through all records in database, fetch subtitle where missing, update database
 #
 
+
 def fetch_subtitle(filename):
     print("\n\n\nfetching subtitle for {0}".format(filename))
     base = os.path.basename(filename)
@@ -45,9 +46,10 @@ if __name__ == '__main__':
                 processed = False
                 
             #delte old records
-            if (row["is_processed"] == 1 and processed and processed < (today-delta)) or \
+            if (processed and processed < (today-delta)) or \
                 not os.path.exists(row["path"]):
-                print("id {0} is now either outdated or file does no longer exist? {1}. Deleting from DB".format(row["id"], row["path"]))
+                print("id {0} is now either outdated or file does no longer exist"
+                      "? {1}. Deleting from DB".format(row["id"], row["path"]))
                 cur.execute("DELETE FROM Mediafiles WHERE id=?",(row["id"],))
             #download new
             elif not row["srt_file"] and not row["is_processed"]:
