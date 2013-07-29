@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import argparse
-import os, sys
-import tempfile
+import os
+import sys
+
 
 from torrentstatus import utils
 
@@ -11,16 +12,17 @@ from torrentstatus import utils
 # This redirects stdin&stderr to file, to avoid that restriction.
 ##
 if "pythonw" in sys.executable or sys.stdin is None or sys.stderr is None:
-    
+
     debugfile = utils.get_config_dir() + os.path.sep + "torrentstatus_stdout.log"
     sys.stdout = sys.stderr = open(debugfile, 'w')
-    
-            
+
 
 from torrentstatus.listeners import onfinish, onstart
 
 parser = argparse.ArgumentParser(description="""Process torrent status changes.
-                                 Example: c:\python33\pythonw.exe -m torrentstatus.handle_status_change --torrentname "%N" --torrentstatus %S  --laststatus %P --downloadpath "%D"  --torrenttype "%K" --filename "%F" --hash "%I" --tracker "%T"
+Example:
+c:\python33\pythonw.exe -m torrentstatus.handle_status_change --torrentname "%N" --torrentstatus %S ^
+--laststatus %P --downloadpath "%D"  --torrenttype "%K" --filename "%F" --hash "%I" --tracker "%T"
                                  """)
 parser.add_argument("--torrentname", help="Ex.: Dexter.S07E10.720p.HDTV.x264-IMMERSE.mkv", required=True)
 parser.add_argument("--torrentstatus", type=int, help="Current torrent status. Ex.: 5 (any value 0-12)", required=True)
@@ -28,17 +30,19 @@ parser.add_argument("--laststatus", type=int, help="Previous torrent status. Ex.
 parser.add_argument("--downloadpath", help="File path where media from torrent is downloaded to. This is used"
                                            " for downloading subtitles Ex.: H:\Other", required=True)
 parser.add_argument("--filename", help="File name used when"
-                                           " downloading subtitles Ex.: foo.bar.s01e01.xvid.avi", required=True)
+                                       " downloading subtitles Ex.: foo.bar.s01e01.xvid.avi", required=True)
 parser.add_argument("--torrenttype", help="single|multi"
-                                           " .Indicates if torrent contains a single file or multiple files", required=True)
-parser.add_argument("--hash", help="Torrenthash for given torrent"
-                                           " ", required=True)
-parser.add_argument("--tracker", help="Tracker url for given torrent. Used to set label."
-                                           " ", required=True)
+                                          " .Indicates if torrent contains a single file or multiple files",
+                                          required=True)
+parser.add_argument("--hash", help="Torrenthash for given torrent",
+                    required=True)
+parser.add_argument("--tracker", help="Tracker url for given torrent. Used to set label.",
+                    required=True)
+parser.add_argument('--debug', dest='debug', action='store_true')
+parser.set_defaults(debug=False)
 args = parser.parse_args()
 
-
-statuses = ("no information","error", "checked", "paused", "super seeding",
+statuses = ("no information", "error", "checked", "paused", "super seeding",
             "seeding", "downloading", "super seeding forced", "seeding forced",
             "downloading forced", "seeding queued", "finished", "queued",
             "stopped")
@@ -54,15 +58,14 @@ statuses = ("no information","error", "checked", "paused", "super seeding",
 if args.torrentname and args.torrentstatus and args.laststatus:
     torrentstatus = statuses[args.torrentstatus]
     laststatus = statuses[args.laststatus]
-    
     if torrentstatus == "downloading" or torrentstatus == "downloading forced":
         onstart.listener(args)
     #
     # torrentstatus = "finished" might happen when download is complete OR
     # when seeding is complete. So check that utorrent last downloaded something
     if (torrentstatus == "finished" or torrentstatus == "seeding") \
-        and (laststatus == "downloading" or laststatus == "downloading forced"):
-        onfinish.listener(args)   
+            and (laststatus == "downloading" or laststatus == "downloading forced"):
+        onfinish.listener(args)
 
 #end
 

@@ -4,9 +4,8 @@
 Torrentstatus.egg-info/
 build/
 dist/
-test_utorrent.py
-test_shlex.py
-test_listeners.py
+test_*.py
+
 setuptools*.gz
 #################
 ## Eclipse

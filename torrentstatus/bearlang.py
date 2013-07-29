@@ -20,11 +20,11 @@ __SHOULD_DEBUG_PRINT = False
 
 def list_get(alist, index):
     """Shorthand function for returning a value from a list by index.
-    
+
     Args:
         alist (list): A list
         index (Integer): An index number that does or does not exist in `l`
-        
+
     Returns:
         String. If index exists, return alist[index] else return empty string
     """
@@ -32,13 +32,15 @@ def list_get(alist, index):
         return alist[index]
     except IndexError:
         return ""
+
+
 def list_has_val(alist, val):
     """Shorthand function for checking if a list has a value
-    
+
     Args:
         l (list): A list
         val (String): a value to search for in `l`
-        
+
     Returns:
         Bool. Whether or not value exists in `l`
     """
@@ -49,13 +51,14 @@ def list_has_val(alist, val):
     except ValueError:
         return False
 
+
 def dprint(*args):
     """Debug prints all args, if debugging is on, else do nothing
-    
+
     Args:
         *args: arguments to print to console when debugging is on.
-        
-        
+
+
     Returns:
         None
     """ 
@@ -69,7 +72,6 @@ class BearLang(object):
     """This BearLang class enables executing a line of code formatted in
 the BearLang language and to match variables defined in the code argument
 against"""
-    
 
     def __init__(self, code, args):
         self.tokens = None
@@ -79,18 +81,19 @@ against"""
         self.allowed_functions = [x.lstrip("_") for x in dir(self)
                                   if x.startswith("_")
                                   and not x.startswith("__")]
-        
+
         self.commandset = None
+
     def _endswith(self, *args):
         """Returns true if arg0 is equal to arg1"""
         if len(args) is not 2:
             raise ValueError("endswith expects exactly 2 parameters")
         return args[0].endswith(args[1])
-    
+
     def _notendswith(self, *args):
         """Returns true if arg0 does not end with arg1"""
         return not self._endswith(*args)
-    
+
     def _contains(self, *args):
         """Returns true if arg1 is in arg0"""
         if len(args) is not 2:
@@ -138,6 +141,7 @@ against"""
         if len(args) is not 0:
             raise ValueError("&& expects exactly 0 parameters")
         return True
+    
     def tokenize(self):
         """Creates tokens and populates self.tokens based on `code`
         in constructor"""
