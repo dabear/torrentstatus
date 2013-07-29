@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import datetime
-import torrentstatus.utils
-
 import os
 import subprocess
 
+import torrentstatus.utils
+from torrentstatus.settings import settings
 
 # This script is supposed to be run on a schedule
 # Loop through all records in database, fetch subtitle where missing, update database
 #
 
 
-def fetch_subtitle(filename):
+def fetch_subtitle(filename, lang=settings["sub_lang"]):
     print("\n\n\nfetching subtitle for {0}".format(filename))
     base = os.path.basename(filename)
     noext = base.rsplit(".", 1)[0]
     print("\nAlso searching by name;{0}".format(noext))
     result = subprocess.call(["filebot", "-non-strict", "-get-subtitles", filename, "--q", noext,
-                              "--lang", "en", "--output", "srt", "--encoding",
+                              "--lang", lang, "--output", "srt", "--encoding",
                               "utf8"])
 
     print("got result from filebot:{0}".format(result))

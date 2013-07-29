@@ -30,7 +30,8 @@ def connect_db():
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         cursor.execute("""
-        CREATE TABLE IF NOT EXISTS Mediafiles( id INTEGER PRIMARY KEY ASC, path TEXT, added_date DATE, is_processed BOOLEAN, processed_date DATE, srt_file TEXT);
+        CREATE TABLE IF NOT EXISTS Mediafiles( id INTEGER PRIMARY KEY ASC, path TEXT,
+        added_date DATE, is_processed BOOLEAN, processed_date DATE, srt_file TEXT);
         """)
 
         return (cursor, conn)
