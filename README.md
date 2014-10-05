@@ -9,9 +9,7 @@ Currently in beta, this set of python scripts makes up a package that can be use
 
 ### On completion of download:
 - Send email
-- Alert through pynma (notify my android)
-- Registers completed download in a locally stored sqlite database. Facilitates subtitle downloading.
-- Download subtitles. Depends on filebot being installed. This feature is currently fully coded but not called on complete.
+- Copy torrent data to new location after completion
 
     
 ## Dependencies
