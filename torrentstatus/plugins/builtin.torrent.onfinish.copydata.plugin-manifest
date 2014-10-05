@@ -1,0 +1,14 @@
+[Core]
+Name =  On Finish Copy Data
+Module = builtin.torrent.onfinish.copydata
+asd = asd
+
+[test]
+lol = bar
+
+[Documentation]
+Author = Bjorn Berg
+Version = 0.1
+Website = http://bjorninge.no
+Description =  Copy data to a specified directory when a torrent has been completely downloaded
+teasr = asd

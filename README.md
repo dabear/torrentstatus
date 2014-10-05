@@ -1,6 +1,6 @@
 # Torrentstatus
 
-Currently in alpha mode, this set of python scripts makes up a package that can be used for automating certain torrent related activities
+Currently in beta, this set of python scripts makes up a package that can be used for automating certain torrent related activities
 
 ## Actions implemented are as follows:
 ### on start of download:
@@ -17,7 +17,6 @@ Currently in alpha mode, this set of python scripts makes up a package that can 
 ## Dependencies
 - uTorrent for windows
 - Python 3.3 or later 
-- Filebot executable installed and available from your path.  Can be downloaded from http://www.filebot.net/#download
 - utorrent webui setup and configured
 
 ## Installation
@@ -38,10 +37,10 @@ Open command line and run the python interpreter against
 c:\python33\python -m torrentstatus.settings
   ```
 
-A new config.ini file will be created at %HOMEPATH%\\.config\Torrentstatus
+A new config.ini and torrentlabels.ini file will be created. The path will
 
-Edit this file, add your settings for sending email and your nma api key ( https://www.notifymyandroid.com/account.jsp)
-
+Edit config.ini to enable sending emails when a torrent starts or completes.
+Edit torrentlabels.ini to set labels on new torrents based on criterias defined in that file.
 
 ## Usage
 - Add this to uTorrents "run program when torrent changes status" config:
@@ -50,7 +49,6 @@ Edit this file, add your settings for sending email and your nma api key ( https
 c:\python33\pythonw.exe -m torrentstatus.handle_status_change --torrentname "%N" --torrentstatus %S  --laststatus %P --downloadpath "%D"  --torrenttype "%K" --filename "%F" --hash "%I" --tracker "%T"
   ```
 
-- Create a windows scheduled task to run c:\python33\pythonw.exe -m torrentstatus.download on a regular basis. This downloads subtitles for finished torrents with media files available.
  
 
 
@@ -70,7 +68,7 @@ c:\python33\python.exe -m torrentstatus.handle_status_change --help
   ```
 
 
-### Invoking onfinish handler manually
+### Testing plugins directly
   
 
 Note the torrent or its path doesn't actually have to exist to test this functionality. Remember to add the debug switch:
@@ -81,14 +79,14 @@ c:\python33\python.exe -m torrentstatus.handle_status_change --torrentname "Kode
   ```
 
 
-## Torrentlabel rules
+## torrentlabels.ini rules
 
-Rules can be defined in torrentlabels.ini, located in the users config dir for torrentstatus. The full config path is %HOMEPATH%\\.config\Torrentstatus\torrentlabels.ini
+Rules can be defined in torrentlabels.ini, located in the users config dir for torrentstatus. The full config path is displayed on screen if you run "python -m torrentstatus.settings"
 
-Please note that a label can have many rules, but only one keyword and one rule per line.
+Please note that a rule definition can be repeated on consecutive lines in the ini file.
  You have to repeat keywords if you want multiple rules for a label.
  Variables here are the same as provided to sys.args when calling torrentstatus.handle_status_change .
- Please note that all rules must be defined in the same section "Torrentlabels". Torrentlabels.ini will be created on the first run.
+ Please note that all rules must be defined in the same section "Torrentlabels". Torrentlabels.ini will be created the first time you run "python -m torrentstatus.settings"
  Here are some examples:
 
 

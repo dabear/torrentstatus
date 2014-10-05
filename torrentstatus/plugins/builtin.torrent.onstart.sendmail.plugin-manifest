@@ -1,0 +1,13 @@
+[Core]
+Name =  Send Mail On Start
+Module = builtin.torrent.onstart.sendmail
+
+[test]
+lol = bar
+
+[Documentation]
+Author = Bjorn Berg
+Version = 0.1
+Website = http://bjorninge.no
+Description = Sends out an email when a utorrent torrent has started
+

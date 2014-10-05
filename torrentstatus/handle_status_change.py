@@ -6,6 +6,10 @@ import sys
 
 
 from torrentstatus import utils
+from torrentstatus.settings import config, get_config_dir
+
+from yapsy.PluginManager import PluginManager
+from yapsy.PluginFileLocator import PluginFileAnalyzerWithInfoFile, PluginFileLocator
 
 ##
 # When running in windowed mode, stdin is fixed size.
@@ -17,7 +21,54 @@ if "pythonw" in sys.executable or sys.stdin is None or sys.stderr is None:
     sys.stdout = sys.stderr = open(debugfile, 'w')
 
 
-from torrentstatus.listeners import onfinish, onstart
+##
+#
+# example plugin loading:
+# https://github.com/headmyshoulder/stuff/blob/master/code_template/code_template.py
+##
+def get_plugins():
+ 
+    plugin_analyzer = PluginFileAnalyzerWithInfoFile(name="torrentstausanalyzer", extensions="plugin-manifest")
+    plugin_locator = PluginFileLocator(analyzers=[plugin_analyzer])
+
+    extra_plugins_dir = config.getSettingsAsDict()["extra_plugins_dir"]
+    plugin_extras = os.path.join(get_config_dir(), extra_plugins_dir)
+
+    directories = [os.path.join(os.path.dirname(os.path.realpath(__file__)), "plugins")]
+
+    ##
+    ## Allow user defined plugins
+    ## These plugins should be named as
+    ## name.function.{py, plugin-manifest}
+    ## Example:
+    ## MyPlugin.onstart.py
+    ## MyPlguin.onstart.plugin-manifest
+    ##
+    if os.path.exists(plugin_extras):
+        directories.append(plugin_extras)
+
+    manager = PluginManager(directories_list=directories, plugin_locator=plugin_locator)
+    manager.collectPlugins()
+    plugins = manager.getAllPlugins()
+
+    # Activate all loaded plugins
+    for pluginInfo in plugins:
+        manager.activatePluginByName(pluginInfo.name)
+    return plugins
+
+
+def call_plugin(plugin, methodname, *args):
+    try:
+        #print("Calling plugin {0}'s method {1} with args {2} - {3}".format(plugin.name, methodname, plugin.details, *args))
+        plugin_result = getattr(plugin.plugin_object, methodname)(plugin.details, *args)
+        if plugin_result is not None:
+            status = "success" if plugin_result else "error"
+            print("Called plugin {0}'s method '{1}' with {2}".format(plugin.name, methodname, status) )
+    except AttributeError:
+        print("Call failed")
+        return False
+    return True
+
 
 parser = argparse.ArgumentParser(description="""Process torrent status changes.
 Example:
@@ -48,6 +99,9 @@ statuses = ("no information", "error", "checked", "paused", "super seeding",
             "stopped")
 
 
+plugins = get_plugins()
+
+
 # Typically, a torrent will begin with these statuses:
 # from stopped (--torrentstatus 12) to queued (--torrentstatus 13):
 #     --torrentname "Dexter.S07E10.720p.HDTV.x264-IMMERSE.mkv" --torrentstatus 12  --laststatus 13 --downloadpath "H:\Other"
@@ -56,16 +110,28 @@ statuses = ("no information", "error", "checked", "paused", "super seeding",
 # and then from downloading (--laststatus 6) to seeding ( --torrentstatus 5 ) or finished ( --torrentstatus 11 ):
 #     --torrentname "Dexter.S07E10.720p.HDTV.x264-IMMERSE.mkv" --torrentstatus 5  --laststatus 6 --downloadpath "H:\Other" 
 if args.torrentname and args.torrentstatus and args.laststatus:
-    torrentstatus = statuses[args.torrentstatus]
+    currentstatus = statuses[args.torrentstatus]
     laststatus = statuses[args.laststatus]
-    if torrentstatus == "downloading" or torrentstatus == "downloading forced":
-        onstart.listener(args)
+
+    #
+    # Onstart and Onfinish are implemented atop of the statuses provided by utorrent
+    # Plugins should normally only react to these two events
+    #
+    if currentstatus == "downloading" or currentstatus == "downloading forced":
+        #onstart.listener(args)
+        #don't expand args, plugin should receive this as one parameter
+        pluginmethod = "start"
     #
     # torrentstatus = "finished" might happen when download is complete OR
     # when seeding is complete. So check that utorrent last downloaded something
-    if (torrentstatus == "finished" or torrentstatus == "seeding") \
+    elif (currentstatus == "finished" or currentstatus == "seeding") \
             and (laststatus == "downloading" or laststatus == "downloading forced"):
-        onfinish.listener(args)
+        pluginmethod = "finish"
+    else:
+        pluginmethod = currentstatus.replace(" ", "")
+
+    #don't expand args, plugin should receive this as one parameter
+    results = [call_plugin(plugin, "on" + pluginmethod, args) for plugin in plugins]
 
 #end
 

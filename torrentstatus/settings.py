@@ -1,10 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-__all__ = ["settings", "CSettings"]
+__all__ = ["config", "labels_config"]
 
 import os
 import collections
 from pprint import pprint
+from appdirs import AppDirs
 
 try:
     import ConfigParser
@@ -13,25 +14,42 @@ except:
 
 
 #default settings
-DEFAULTS = {
+DEFAULTS_CONFIG = {
     'email_send_from': ("bjorn@example.com",),
     'email_send_to': ("bjorn@example.com",),
     'email_smtp': ("smtp.altibox.no",),
     'nma_key': ("0zmfq03bug1aghi1vtqy1bhfb7hfb8lq267maw2p3hebgh60",),
-    'media_db': ("~/.config/Torrentstatus/mediafiles.db",),
-    'sub_lang': ("eng",),
     'webui_enable': ("0",),
     'webui_username': ("bjorninge",),
     "webui_password": ("password",),
-    "webui_host": ("192.168.10.102:9050",)
+    "webui_host": ("192.168.10.102:9050",),
+    "plugin_setlabel_enable": ("1",),
+    "plugin_sendmail_enable": ("1",),
+    "plugin_copydata_enable": ("0",),
+    "plugin_copydata_todir": ("H:/tobesynced",),
+    "extra_plugins_dir": ("plugins",)
 }
 
+DEFAULTS_SETLABEL = {
+    'adefaultlabel': ("startswith(tracker, 'http://tracker.undefined.net')",),
+}
+COMMENTS_SETLABEL = """;
+; This is a comment. Here are some examples that can be used to specify utorrent labels.
+; Please note that a label can have many rules, but only one keyword and one rule per line.
+; You have to repeat keywords if you want multiple rules for a label.
+; Variables here are the same as provided to sys.args when calling torrentstatus.handle_status_change .
+; Also, The default label "adefaultlabel" can be changed, but not removed
+; Here are some examples:
+;
+; Series season packs = contains(tracker, 'mytvsite.com') && equals(torrenttype, 'multi')
+; Series = contains(tracker, 'mytvsite.com') && equals(torrenttype, 'single')
+; Movies = contains(tracker, 'mymoviesite')
+; Movies = contains(tracker, 'myothermoviesite')
+"""
 
 def get_config_dir():
-    config_home = os.getenv("XDG_CONFIG_HOME")
-    if config_home is None:
-        config_home = os.path.expanduser("~") + os.path.sep + ".config"
-    return config_home + os.path.sep + "Torrentstatus" + os.path.sep
+    dirs = AppDirs("Torrentstatus", "dabear")
+    return dirs.user_data_dir
 
 
 # Subclassing OrderedDict is not possible anymore.
@@ -65,7 +83,7 @@ class MultiOrderedDict(collections.MutableMapping):
         #print("setting mdict val:",  value)
         if isinstance(value, list) and key in self.store:
             self.store[self.__keytransform__(key)].extend(value)
-        else:  
+        else:
             self.store[self.__keytransform__(key)] = value
 
     def __delitem__(self, key):
@@ -103,8 +121,8 @@ class MultiOrderedDict(collections.MutableMapping):
 
 
 class CSettings():
-    def __init__(self, defaults, section="Torrentstatus",
-                 configfilebasename="config.ini", initopcomments=""):
+    def __init__(self, defaults, section,
+                 configfilebasename, initopcomments):
         self.cfg = None
         self.section = section
         self.defaults = defaults
@@ -170,14 +188,23 @@ class CSettings():
             d[t[0]] = t[1]
         return d
 
-conf = CSettings(DEFAULTS)
-conf.checkSection()
-settings = conf.getSettingsAsDict()
+config = CSettings(DEFAULTS_CONFIG, section="Torrentstatus",
+                   configfilebasename="config.ini", initopcomments="")
+config.checkSection()
+
+labels_config = CSettings(DEFAULTS_SETLABEL, section="Torrentlabels",
+                          configfilebasename="torrentlabels.ini", initopcomments=COMMENTS_SETLABEL)
+labels_config.checkSection()
 
 
 if __name__ == '__main__':
-    print("\nconfiguration file is located in {0}, please "
+    print("\nGeneral config file is located in {0}, please "
           "modify to enable all functionality. "
           "Below is a list over parsed options from "
-          "the configuration file:\n".format(conf.getSettingsFile()))
-    pprint(settings)
+          "the configuration file:\n".format(config.getSettingsFile()))
+    pprint(config.getSettingsAsDict())
+
+    print("\nLabels config file is located in {0}, please "
+          "change this file to match your needs. "
+          "Showing default labels below:".format(labels_config.getSettingsFile()))
+    pprint(labels_config.getSettingsAsDict())

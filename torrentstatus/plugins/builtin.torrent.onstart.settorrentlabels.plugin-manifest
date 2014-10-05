@@ -1,0 +1,13 @@
+[Core]
+Name =  Set Torrent Labels On Start
+Module = builtin.torrent.onstart.settorrentlabels
+
+[test]
+lol = bar
+
+[Documentation]
+Author = Bjorn Berg
+Version = 0.1
+Website = http://bjorninge.no
+Description = Connects to utorrent and sets labels based on user preferences when a torrent is started
+

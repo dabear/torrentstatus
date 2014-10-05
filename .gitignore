@@ -5,7 +5,7 @@ Torrentstatus.egg-info/
 build/
 dist/
 test_*.py
-
+.idea/
 setuptools*.gz
 #################
 ## Eclipse
