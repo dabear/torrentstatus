@@ -5,7 +5,7 @@ Currently in beta, this set of python scripts makes up a package that can be use
 ## Actions implemented are as follows:
 ### on start of download:
 - Send email
-- Change label of torrent based on a ruleset defined in a config file ("auto label" feature). Uses [Bearlang][] for user defined label rules. After the first run, %HOMEPATH%\\.config\Torrentstatus\torrentlabels.ini will be created; please see the torrentlabels example below.
+- Change label of torrent based on a ruleset defined in a config file ("auto label" feature). Uses [Bearlang][] for user defined label rules. After the first run, torrentlabels.ini will be created; please see the torrentlabels example below.
 
 ### On completion of download:
 - Send email
@@ -37,7 +37,7 @@ Open command line and run the python interpreter against
 c:\python33\python -m torrentstatus.settings
   ```
 
-A new config.ini and torrentlabels.ini file will be created. The path will
+A new config.ini and torrentlabels.ini file will be created, and the config path will be displayed on the console.
 
 Edit config.ini to enable sending emails when a torrent starts or completes.
 Edit torrentlabels.ini to set labels on new torrents based on criterias defined in that file.
@@ -86,7 +86,8 @@ Rules can be defined in torrentlabels.ini, located in the users config dir for t
 Please note that a rule definition can be repeated on consecutive lines in the ini file.
  You have to repeat keywords if you want multiple rules for a label.
  Variables here are the same as provided to sys.args when calling torrentstatus.handle_status_change .
- Please note that all rules must be defined in the same section "Torrentlabels". Torrentlabels.ini will be created the first time you run "python -m torrentstatus.settings"
+ Please note that all rules must be defined in the same section "Torrentlabels". Torrentlabels.ini will be created the first time you run "python -m torrentstatus.settings".
+
  Here are some examples:
 
 
